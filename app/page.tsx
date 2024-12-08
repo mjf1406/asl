@@ -139,20 +139,20 @@ export default function Home() {
                     <h2 className="text-center text-2xl">Silence Is Golden</h2>
                     <p>
                         I first thought of using sign language during silent
-                        time when I learned about the
+                        time when I learned about the{" "}
                         <a
                             href="https://en.wikipedia.org/wiki/Irrelevant_speech_effect"
                             className="link"
                         >
                             Irrelevant Speech Effect
                         </a>
-                        . This led me to create
+                        . This led me to create{" "}
                         <a
                             href="https://mr-monkey-portfolio.vercel.app/blog/the-web-apps-that-i-have-built#magnitext"
                             className="link"
                         >
                             MagniText
-                        </a>
+                        </a>{" "}
                         (big updates coming soon!) because I realized that
                         sometimes I needed to say many more words than just one
                         to my students while staying silent. Neither I nor my
