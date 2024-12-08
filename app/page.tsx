@@ -1,9 +1,15 @@
 import ASLGrid from "../components/ASLGrid";
 import Footer from "../components/Footer";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Home() {
     return (
-        <div className="flex flex-col gap-2 items-center justify-center p-5 bg-background">
+        <div className="flex flex-col items-center justify-center p-5 bg-background">
             <h1 className="flex gap-5 justify-center items-center text-4xl font-[family-name:var(--font-fredoka)]">
                 {/* <div className="rounded-full bg-white bg-opacity-40 p-3"> */}
                 <svg
@@ -93,23 +99,110 @@ export default function Home() {
                 {/* </div> */}
                 ASL for Silent Time
             </h1>
-            <p className="max-w-xl mt-10 mb-10">
-                Welcome! We (a teacher/dev and a teacher/artist) made this site
-                in collaboration to give these ASL resources away for free and
-                to make them easy to print in any way you might want. See the
-                footer to learn more about us. Enjoy! If you feel so inclined,
-                send us money on{" "}
+            <p className="max-w-xl mt-10 mb-10 text-center w-full">
+                Welcome!{" "}
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger className="cursor-help">
+                            <span className="border-b border-1 border-dotted">
+                                We
+                            </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Two teachers who love to program and make art
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>{" "}
+                made this site to give these ASL resources away for free and to
+                make them easy to print in any way you might want. The code is
+                published under the{" "}
                 <a
+                    href="https://opensource.org/license/mit"
                     className="link"
-                    href="https://ko-fi.com/michaelfitzgerald1406"
                 >
-                    Ko-fi
-                </a>
-                . We split every donation 50-50.
+                    MIT License
+                </a>{" "}
+                and the images are published under{" "}
+                <a
+                    href="https://creativecommons.org/licenses/by-nc/4.0/deed.en"
+                    className="link"
+                >
+                    CC BY-NC 4.0
+                </a>{" "}
+                (non-commercial). Enjoy!
             </p>
-            <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+            <main className="flex flex-col row-start-2 items-center sm:items-start">
                 <ASLGrid />
             </main>
+            <div className="max-w-xl">
+                <div className="space-y-4 mt-10">
+                    <h2 className="text-center text-2xl">Silence Is Golden</h2>
+                    <p>
+                        I first thought of using sign language during silent
+                        time when I learned about the
+                        <a
+                            href="https://en.wikipedia.org/wiki/Irrelevant_speech_effect"
+                            className="link"
+                        >
+                            Irrelevant Speech Effect
+                        </a>
+                        . This led me to create
+                        <a
+                            href="https://mr-monkey-portfolio.vercel.app/blog/the-web-apps-that-i-have-built#magnitext"
+                            className="link"
+                        >
+                            MagniText
+                        </a>
+                        (big updates coming soon!) because I realized that
+                        sometimes I needed to say many more words than just one
+                        to my students while staying silent. Neither I nor my
+                        students were fluent ASL speakers, so...
+                    </p>
+
+                    <p>
+                        I decided to try it out at Maple Bear back in 2021, but
+                        it didn’t land as well as I had hoped, partly because I
+                        didn’t stick with it for whatever reason. However, at
+                        Younghoon, I put up the posters without mentioning them
+                        at all. One giant poster was next to the SMART Board,
+                        and another smaller poster was just under the analog
+                        clock.
+                    </p>
+
+                    <p>
+                        I could have never foreseen what my students would do
+                        during the first silent time after I put up those
+                        posters. You see, those posters had a title, &quot;Sign
+                        Language,&quot; and a subtitle, &quot;For use during
+                        Silent Time.&quot; Well, guess what they started doing?
+                    </p>
+
+                    <p>
+                        They started signing to me! And the funniest part was
+                        that I didn’t even know what they were doing! &quot;Why
+                        are you moving your hands like that? Are you okay?&quot;
+                        In the end, we learned together, and many of them LOVED
+                        it. They even asked me to create a Blooket for them to
+                        play. Let&apos;s be real — they just wanted an excuse to
+                        play more Blooket in class, but you know what?
+                        That&apos;s okay! 😂
+                    </p>
+                </div>
+                <div className="space-y-4 mt-10">
+                    <h2 className="text-2xl text-center">Donations</h2>
+                    <p>
+                        If you feel so inclined, we accept donations via{" "}
+                        <a
+                            className="link"
+                            href="https://ko-fi.com/michaelfitzgerald1406"
+                        >
+                            Ko-fi
+                        </a>
+                        . We split every donation 50-50. We hope you found this
+                        useful! If you donated, thank you kindly 😊
+                    </p>
+                </div>
+            </div>
             <Footer />
         </div>
     );

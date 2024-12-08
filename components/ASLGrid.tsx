@@ -303,7 +303,41 @@ const ASLGrid = () => {
                     );
                 })}
             </div>
-
+            <div className="space-y-2">
+                <div className="text-sm text-center">
+                    Click the signs that you want, else click none to get them
+                    all!
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                    <Button
+                        onClick={handlePrint}
+                        className="h-10"
+                    >
+                        <PrinterIcon className="!w-6 !h-6" />{" "}
+                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                            Print
+                        </span>
+                    </Button>
+                    <Button
+                        onClick={handleDownloadGrid}
+                        className="h-10"
+                    >
+                        <DownloadIcon className="!w-6 !h-6" />{" "}
+                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                            Download Grid
+                        </span>
+                    </Button>
+                    <Button
+                        onClick={handleDownloadEach}
+                        className="h-10"
+                    >
+                        <DownloadIcon className="!w-6 !h-6" />{" "}
+                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                            Download Each
+                        </span>
+                    </Button>
+                </div>
+            </div>
             {/* Hidden printable area */}
             <div
                 className="hidden"
