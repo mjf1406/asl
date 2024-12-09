@@ -32,6 +32,11 @@ const SkinToneSelector = ({
     onChange,
     onCustomColorChange,
 }: SkinToneSelectorProps) => {
+    const handleRandomClick = () => {
+        // Always trigger onChange with "random", even if already selected
+        onChange("random");
+    };
+
     return (
         <Card className="w-full max-w-md mx-auto mb-6 shadow-none">
             <CardHeader>
@@ -41,20 +46,20 @@ const SkinToneSelector = ({
                 <div className="flex flex-wrap gap-4 justify-center items-center">
                     <div className="flex gap-2 justify-center items-center">
                         <button
-                            onClick={() => onChange("random")}
-                            className={`p-2 border-2 transition-colors duration-300 ease-in-out ${
+                            onClick={handleRandomClick}
+                            className={`p-2 border-2 transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 ${
                                 selectedTone === "random"
                                     ? "border-primary rounded-sm"
-                                    : "border-transparent rounded-full"
+                                    : "border-transparent rounded-full hover:border-primary/50"
                             }`}
                         >
                             <Dices className="w-8 h-8" />
                         </button>
                         <div
-                            className={`p-2 border-2 transition-colors duration-300 ease-in-out ${
+                            className={`p-2 border-2 transition-all duration-300 ease-in-out hover:scale-110 ${
                                 selectedTone === "custom"
                                     ? "border-primary rounded-sm"
-                                    : "border-transparent rounded-full"
+                                    : "border-transparent rounded-full hover:border-primary/50"
                             }`}
                         >
                             <ColorPicker
@@ -72,10 +77,10 @@ const SkinToneSelector = ({
                             <button
                                 key={tone}
                                 onClick={() => onChange(tone as SkinTone)}
-                                className={`p-2 border-2 transition-colors duration-300 ease-in-out ${
+                                className={`p-2 border-2 transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 ${
                                     selectedTone === tone
                                         ? "border-primary rounded-sm"
-                                        : "border-transparent rounded-full"
+                                        : "border-transparent rounded-full hover:border-primary/50"
                                 }`}
                             >
                                 <div

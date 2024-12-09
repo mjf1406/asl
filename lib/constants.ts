@@ -17,19 +17,19 @@ export const signs: Sign[] = [
     // Classroom Management
     {
         id: 1,
-        sign: "stop-solid",
+        sign: "hand-peace-solid",
         meaning: "Stop",
         category: "Classroom Management",
     },
     {
         id: 2,
-        sign: "chair-solid",
+        sign: "hand-scissors-solid",
         meaning: "Sit",
         category: "Classroom Management",
     },
     {
         id: 3,
-        sign: "person-solid",
+        sign: "hand-spock-solid",
         meaning: "Stand",
         category: "Classroom Management",
     },
@@ -53,19 +53,19 @@ export const signs: Sign[] = [
     },
     {
         id: 7,
-        sign: "volume-low-solid",
+        sign: "hand-point-up-solid",
         meaning: "Be Quiet",
         category: "Classroom Management",
     },
     {
         id: 8,
-        sign: "people-group-solid",
+        sign: "hand-clapping-solid",
         meaning: "Together",
         category: "Classroom Management",
     },
     {
         id: 9,
-        sign: "eye-solid",
+        sign: "hand-praying-solid",
         meaning: "Focus/Pay Attention",
         category: "Classroom Management",
     },

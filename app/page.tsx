@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import ASLGrid from "../components/ASLGrid";
 import Footer from "../components/Footer";
 import {
@@ -104,7 +105,7 @@ export default function Home() {
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger className="cursor-help">
-                            <span className="border-b border-1 border-dotted">
+                            <span className="border-b border-1 border-dotted border-black">
                                 We
                             </span>
                         </TooltipTrigger>
@@ -131,9 +132,59 @@ export default function Home() {
                 </a>{" "}
                 (non-commercial). Enjoy!
             </p>
+            <p>
+                Please submit feedback{" "}
+                <a
+                    className="link"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScMUvCMbTa_TYFHoaWJFMSDukShHBcqZaw3mb1Jp8i6Yw5azw/viewform?usp=header"
+                >
+                    here
+                </a>
+                .
+            </p>
+            <div className="block md:hidden">
+                <div className="flex max-w-2xl items-center justify-center gap-2 rounded-xl bg-yellow-400/50 border-2 border-yellow-600">
+                    <div className="rounded-l-xl bg-yellow-400 p-4">
+                        <TriangleAlert size={48} />
+                    </div>
+                    <div className="pr-4 font-medium">
+                        <span className="font-[family-name:var(--font-fredoka)]">
+                            It looks like you&apos;re on a phone!
+                        </span>
+                        <p className="text-xs">
+                            For best results, please print and/or download from
+                            a large-screen device, like a computer or tablet.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-5 flex max-w-2xl items-center justify-center gap-2 rounded-xl bg-yellow-400/50 border-2 border-yellow-600">
+                <div className="rounded-l-xl bg-yellow-400 p-4">
+                    <TriangleAlert size={48} />
+                </div>
+                <div className="pr-4 font-medium">
+                    <span className="font-[family-name:var(--font-fredoka)]">
+                        The below are placeholders for testing!
+                    </span>
+                    <p className="text-xs">
+                        I&apos;m currently looking for a digital artist to make
+                        upwards of 60 SVG icons, each for a unique ASL sign.
+                    </p>
+                </div>
+            </div>
             <main className="flex flex-col row-start-2 items-center sm:items-start">
                 <ASLGrid />
             </main>
+            <p>
+                Please submit feedback{" "}
+                <a
+                    className="link"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScMUvCMbTa_TYFHoaWJFMSDukShHBcqZaw3mb1Jp8i6Yw5azw/viewform?usp=header"
+                >
+                    here
+                </a>
+                .
+            </p>
             <div className="max-w-xl">
                 <div className="space-y-4 mt-10">
                     <h2 className="text-center text-2xl">Silence Is Golden</h2>
@@ -153,10 +204,23 @@ export default function Home() {
                         >
                             MagniText
                         </a>{" "}
-                        (big updates coming soon!) because I realized that
-                        sometimes I needed to say many more words than just one
-                        to my students while staying silent. Neither I nor my
-                        students were fluent ASL speakers, so...
+                        <span></span>(
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger className="cursor-help">
+                                    <span className="border-b border-1 border-dotted border-black">
+                                        V2 soon!
+                                    </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    I wrote this on 2024/12/9, so...
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        ) because I realized that sometimes I needed to say many
+                        more words than just one to my students while staying
+                        silent. Neither I nor my students were fluent ASL
+                        speakers, so...
                     </p>
 
                     <p>

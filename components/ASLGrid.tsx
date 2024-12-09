@@ -10,27 +10,45 @@ import SkinToneSelector, {
 import { signs } from "@/lib/constants";
 import { getSignIcon } from "@/app/asl-icons/getSignIcon";
 import { Button } from "./ui/button";
-import { DownloadIcon, PrinterIcon } from "lucide-react";
+import { CircleAlert, DownloadIcon, PrinterIcon } from "lucide-react";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
+// Import ShadCN Dialog components
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog"; // Adjust the import path based on your project structure
+
 type SVGComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
 const ASLGrid = () => {
+    // Existing state variables
     const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
     const [selectedTone, setSelectedTone] = useState<SkinTone>("3");
     const [customColor, setCustomColor] = useState("#e3b38d");
     const [randomTones, setRandomTones] = useState<Record<number, string>>({});
+    const [randomKey, setRandomKey] = useState(0);
     const [signComponents, setSignComponents] = useState<
-        Record<
-            number,
-            React.LazyExoticComponent<
-                React.FC<React.SVGProps<SVGSVGElement>>
-            > | null
-        >
+        Record<number, React.LazyExoticComponent<SVGComponent> | null>
     >({});
     const [selectedCards, setSelectedCards] = useState<Set<number>>(new Set());
+
+    // New state variables for the print dialog
+    const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
+    const [printTitle, setPrintTitle] = useState("");
+    const [printSubtitle, setPrintSubtitle] = useState("");
+
+    // New state variables for customization
+    const [numColumns, setNumColumns] = useState<number>(4); // Default to 4 columns
+    const [cardSize, setCardSize] = useState<
+        "very-small" | "small" | "medium" | "large" | "very-large"
+    >("medium"); // Default to medium
 
     const gridRef = useRef<HTMLDivElement>(null);
     const printableRef = useRef<HTMLDivElement>(null);
@@ -58,7 +76,6 @@ const ASLGrid = () => {
         loadSigns();
     }, []);
 
-    // Generate random tones for each sign if 'random' is selected
     useEffect(() => {
         if (selectedTone === "random") {
             const newRandomTones: Record<number, string> = {};
@@ -69,7 +86,15 @@ const ASLGrid = () => {
         } else {
             setRandomTones({});
         }
-    }, [selectedTone]);
+    }, [selectedTone, randomKey]);
+
+    const handleSkinToneChange = (tone: SkinTone) => {
+        setSelectedTone(tone);
+        if (tone === "random") {
+            // Increment the key to force new random generation
+            setRandomKey((prev) => prev + 1);
+        }
+    };
 
     const getSkinToneForSign = (signId: number) => {
         if (selectedTone === "random") {
@@ -98,6 +123,10 @@ const ASLGrid = () => {
     };
 
     const handlePrint = () => {
+        setIsPrintDialogOpen(true);
+    };
+
+    const triggerPrint = () => {
         const printableContent = printableRef.current;
         if (!printableContent) return;
 
@@ -111,12 +140,42 @@ const ASLGrid = () => {
             printWindow.document.write(
                 `<style>
                     body { font-family: Arial, sans-serif; padding: 20px; }
-                    .print-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+                    .print-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+                    .print-subtitle { text-align: center; font-size: 18px; margin-bottom: 20px; }
+                    .print-grid { display: grid; grid-template-columns: repeat(${numColumns}, 1fr); gap: 20px; }
                     .print-card { border: 1px solid #ccc; padding: 10px; text-align: center; }
-                    .print-card svg { width: 100px; height: 100px; }
+                    .print-card svg { width: ${
+                        cardSize === "very-small"
+                            ? "60px"
+                            : cardSize === "small"
+                            ? "80px"
+                            : cardSize === "large"
+                            ? "120px"
+                            : cardSize === "very-large"
+                            ? "160px"
+                            : "100px"
+                    }; height: ${
+                    cardSize === "very-small"
+                        ? "60px"
+                        : cardSize === "small"
+                        ? "80px"
+                        : cardSize === "large"
+                        ? "120px"
+                        : cardSize === "very-large"
+                        ? "160px"
+                        : "100px"
+                }; }
                 </style>`
             );
-            printWindow.document.write("</head><body >");
+            printWindow.document.write("</head><body>");
+            // Insert title and subtitle
+            printWindow.document.write(
+                `<div class="print-title">${printTitle}</div>`
+            );
+            printWindow.document.write(
+                `<div class="print-subtitle">${printSubtitle}</div>`
+            );
+            // Insert the ASL signs
             printWindow.document.write(printableContent.innerHTML);
             printWindow.document.write("</body></html>");
             printWindow.document.close();
@@ -168,16 +227,15 @@ const ASLGrid = () => {
                 scale: 2, // Increase resolution
             });
 
-            // Convert canvas to PNG blob (Changed from JPEG to PNG)
-            const blob = await new Promise<Blob | null>(
-                (resolve) => canvas.toBlob(resolve, "image/png") // Changed to "image/png"
+            // Convert canvas to PNG blob
+            const blob = await new Promise<Blob | null>((resolve) =>
+                canvas.toBlob(resolve, "image/png")
             );
 
             if (blob) {
                 const signId = card.getAttribute("data-sign-id");
                 const signMeaning = card.getAttribute("data-sign-meaning");
                 zip.file(`${signMeaning}_${signId}.png`, blob, {
-                    // Changed extension to .png
                     binary: true,
                 });
             }
@@ -191,26 +249,31 @@ const ASLGrid = () => {
 
     return (
         <div className="container mx-auto p-6 space-y-10">
-            <div className="flex justify-between items-center mb-4">
+            {/* Skin Tone Selector and Customization Controls */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
+                {/* Skin Tone Selector */}
                 <SkinToneSelector
                     selectedTone={selectedTone}
                     customColor={customColor}
-                    onChange={setSelectedTone}
+                    onChange={handleSkinToneChange}
                     onCustomColorChange={setCustomColor}
                 />
             </div>
+
+            {/* Action Buttons */}
             <div className="space-y-2">
                 <div className="text-sm text-center">
                     Click the signs that you want, else click none to get them
                     all!
                 </div>
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-3 sm:text-base text-xl">
+                    {/* Print Button to open the dialog */}
                     <Button
                         onClick={handlePrint}
                         className="h-10"
                     >
                         <PrinterIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Print
                         </span>
                     </Button>
@@ -219,7 +282,7 @@ const ASLGrid = () => {
                         className="h-10"
                     >
                         <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Download Grid
                         </span>
                     </Button>
@@ -228,15 +291,93 @@ const ASLGrid = () => {
                         className="h-10"
                     >
                         <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Download Each
                         </span>
                     </Button>
                 </div>
             </div>
+            {/* Customization Controls */}
+            <div className="flex flex-col md:flex-row items-center justify-center md:items-center space-y-4 md:space-y-0 md:space-x-6">
+                {/* Number of Columns */}
+                <div className="flex flex-col">
+                    <label
+                        htmlFor="numColumns"
+                        className="text-sm font-medium"
+                    >
+                        Number of Columns
+                    </label>
+                    <select
+                        id="numColumns"
+                        value={numColumns}
+                        onChange={(e) => setNumColumns(Number(e.target.value))}
+                        className="mt-1 p-2 border border-gray-300 rounded"
+                    >
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                        <option value={6}>6</option>
+                        <option value={7}>7</option>
+                        <option value={8}>8</option>
+                    </select>
+                </div>
+
+                {/* Card Size */}
+                <div className="flex flex-col">
+                    <label
+                        htmlFor="cardSize"
+                        className="text-sm font-medium"
+                    >
+                        Card Size
+                    </label>
+                    <select
+                        id="cardSize"
+                        value={cardSize}
+                        onChange={(e) =>
+                            setCardSize(
+                                e.target.value as
+                                    | "very-small"
+                                    | "small"
+                                    | "medium"
+                                    | "large"
+                                    | "very-large"
+                            )
+                        }
+                        className="mt-1 p-2 border border-gray-300 rounded"
+                    >
+                        <option value="very-small">Very Small</option>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                        <option value="very-large">Very Large</option>
+                    </select>
+                </div>
+            </div>
+            {numColumns >= 6 && (
+                <div className="w-full flex items-center justify-center lg:hidden">
+                    <div className="mt-5 flex w-fit items-center justify-center gap-2 rounded-xl bg-orange-400/50 border-2 border-orange-600">
+                        <div className="rounded-l-xl bg-orange-400 p-4">
+                            <CircleAlert size={48} />
+                        </div>
+                        <div className="pr-4 font-medium">
+                            <span className="font-[family-name:var(--font-fredoka)]">
+                                Are the cards getting squished?
+                            </span>
+                            <p className="text-xs">
+                                Try making the window bigger or zooming out.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* ASL Signs Grid */}
             <div
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+                className="grid gap-4"
                 ref={gridRef}
+                style={{
+                    gridTemplateColumns: `repeat(${numColumns}, minmax(0, 1fr))`,
+                }}
             >
                 {signs.map((sign) => {
                     if (failedImages.has(sign.id)) {
@@ -251,18 +392,48 @@ const ASLGrid = () => {
                     const skinTone = getSkinToneForSign(sign.id);
                     const isSelected = selectedCards.has(sign.id);
 
+                    // Define card size classes or styles based on cardSize
+                    let sizeClasses = "";
+                    let svgSize = 100; // Default
+
+                    switch (cardSize) {
+                        case "very-small":
+                            sizeClasses = "p-2";
+                            svgSize = 60;
+                            break;
+                        case "small":
+                            sizeClasses = "p-3";
+                            svgSize = 80;
+                            break;
+                        case "medium":
+                            sizeClasses = "p-4";
+                            svgSize = 100;
+                            break;
+                        case "large":
+                            sizeClasses = "p-6";
+                            svgSize = 120;
+                            break;
+                        case "very-large":
+                            sizeClasses = "p-8";
+                            svgSize = 160;
+                            break;
+                        default:
+                            sizeClasses = "p-4";
+                            svgSize = 100;
+                    }
+
                     return (
                         <Card
                             key={sign.id}
-                            className={`overflow-hidden cursor-pointer relative download-card ${
+                            className={`overflow-hidden cursor-pointer relative download-card ${sizeClasses} ${
                                 isSelected ? "border-4 border-blue-500" : ""
                             }`}
                             onClick={() => toggleSelectCard(sign.id)}
                             data-sign-id={sign.id}
                             data-sign-meaning={sign.meaning}
                         >
-                            <CardContent className="p-6 flex flex-col items-center">
-                                <div className="relative w-32 h-32 mb-2">
+                            <CardContent className="flex h-full gap-2 flex-col items-center justify-center">
+                                <div className="relative">
                                     <Suspense
                                         fallback={
                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -271,8 +442,8 @@ const ASLGrid = () => {
                                         }
                                     >
                                         <SignSVG
-                                            width="128"
-                                            height="128"
+                                            width={`${svgSize}`}
+                                            height={`${svgSize}`}
                                             style={{
                                                 fill: skinTone,
                                                 stroke: "#000",
@@ -286,7 +457,7 @@ const ASLGrid = () => {
                                     </Suspense>
                                 </div>
                                 <p
-                                    className="text-center font-medium text-lg"
+                                    className="text-center font-medium sm:text-base text-lg"
                                     style={{
                                         fontFamily: "var(--font-fredoka)",
                                     }}
@@ -303,18 +474,21 @@ const ASLGrid = () => {
                     );
                 })}
             </div>
+
+            {/* Action Buttons at the Bottom */}
             <div className="space-y-2">
                 <div className="text-sm text-center">
                     Click the signs that you want, else click none to get them
                     all!
                 </div>
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-3 sm:text-base text-xl">
+                    {/* Print Button to open the dialog */}
                     <Button
                         onClick={handlePrint}
                         className="h-10"
                     >
                         <PrinterIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Print
                         </span>
                     </Button>
@@ -323,7 +497,7 @@ const ASLGrid = () => {
                         className="h-10"
                     >
                         <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Download Grid
                         </span>
                     </Button>
@@ -332,18 +506,78 @@ const ASLGrid = () => {
                         className="h-10"
                     >
                         <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)] text-xl">
+                        <span className="font-[family-name:var(--font-fredoka)]">
                             Download Each
                         </span>
                     </Button>
                 </div>
             </div>
+
+            {/* ShadCN Dialog for Print */}
+            <Dialog
+                open={isPrintDialogOpen}
+                onOpenChange={setIsPrintDialogOpen}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Print ASL Signs</DialogTitle>
+                        <DialogDescription>
+                            Please enter a title and subtitle for your printout.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex flex-col space-y-4 mt-4">
+                        <label className="flex flex-col">
+                            <span className="text-sm font-medium">Title</span>
+                            <input
+                                type="text"
+                                value={printTitle}
+                                onChange={(e) => setPrintTitle(e.target.value)}
+                                className="mt-1 p-2 border border-gray-300 rounded"
+                                placeholder="Enter title"
+                            />
+                        </label>
+                        <label className="flex flex-col">
+                            <span className="text-sm font-medium">
+                                Subtitle
+                            </span>
+                            <input
+                                type="text"
+                                value={printSubtitle}
+                                onChange={(e) =>
+                                    setPrintSubtitle(e.target.value)
+                                }
+                                className="mt-1 p-2 border border-gray-300 rounded"
+                                placeholder="Enter subtitle"
+                            />
+                        </label>
+                    </div>
+                    <DialogFooter className="flex justify-end space-x-2 mt-6">
+                        <Button
+                            onClick={() => {
+                                setIsPrintDialogOpen(false);
+                                triggerPrint();
+                            }}
+                            className="h-10"
+                        >
+                            <PrinterIcon className="!w-4 !h-4 mr-2" /> Print
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsPrintDialogOpen(false)}
+                            className="h-10"
+                        >
+                            Cancel
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             {/* Hidden printable area */}
             <div
                 className="hidden"
                 ref={printableRef}
             >
-                <h1>ASL Signs</h1>
+                {/* The title and subtitle are dynamically inserted in the print window */}
                 <div className="print-grid">
                     {signs
                         .filter(
@@ -369,8 +603,28 @@ const ASLGrid = () => {
                                     className="print-card"
                                 >
                                     <SignSVG
-                                        width="100"
-                                        height="100"
+                                        width={
+                                            cardSize === "very-small"
+                                                ? "60"
+                                                : cardSize === "small"
+                                                ? "80"
+                                                : cardSize === "large"
+                                                ? "120"
+                                                : cardSize === "very-large"
+                                                ? "160"
+                                                : "100"
+                                        }
+                                        height={
+                                            cardSize === "very-small"
+                                                ? "60"
+                                                : cardSize === "small"
+                                                ? "80"
+                                                : cardSize === "large"
+                                                ? "120"
+                                                : cardSize === "very-large"
+                                                ? "160"
+                                                : "100"
+                                        }
                                         style={{
                                             fill: skinTone,
                                             stroke: "#000",
