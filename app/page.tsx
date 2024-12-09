@@ -168,7 +168,9 @@ export default function Home() {
                     </span>
                     <p className="text-xs">
                         I&apos;m currently looking for a digital artist to make
-                        upwards of 60 SVG icons, each for a unique ASL sign.
+                        upwards of 60 SVG icons, each for a unique ASL sign. I
+                        will not pay you and you must be willing to release your
+                        art for free under the CC BY-NC 4.0 license.
                     </p>
                 </div>
             </div>
