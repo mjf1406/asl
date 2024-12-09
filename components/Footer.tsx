@@ -46,10 +46,11 @@ const Footer = () => {
 
             <div className="text-2xs font-[family-name:var(--font-geist-mono)] flex flex-col gap-2 items-center justify-center">
                 <div className="">
-                    Code is © {new Date().getFullYear()} MIT Licensed
+                    Code © {new Date().getFullYear()}. Licensed under MIT.
                 </div>
                 <div className="">
-                    Art is © {new Date().getFullYear()} CC BY-NC 4.0 Licensed
+                    Art © {new Date().getFullYear()}. Licensed under CC BY-NC
+                    4.0.
                 </div>
             </div>
         </footer>

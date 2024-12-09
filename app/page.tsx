@@ -100,7 +100,7 @@ export default function Home() {
                 {/* </div> */}
                 ASL for Silent Time
             </h1>
-            <p className="max-w-xl mt-10 mb-10 text-center w-full">
+            <p className="max-w-xl mt-10 mb-5 text-center w-full">
                 Welcome!{" "}
                 <TooltipProvider>
                     <Tooltip>
@@ -132,7 +132,7 @@ export default function Home() {
                 </a>{" "}
                 (non-commercial). Enjoy!
             </p>
-            <p>
+            <p className="mb-5">
                 Please submit feedback{" "}
                 <a
                     className="link"
