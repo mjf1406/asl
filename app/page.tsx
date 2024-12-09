@@ -164,7 +164,7 @@ export default function Home() {
                 </div>
                 <div className="pr-4 font-medium">
                     <span className="font-[family-name:var(--font-fredoka)]">
-                        The below are placeholders for testing!
+                        The below images are placeholders for testing!
                     </span>
                     <p className="text-xs">
                         I&apos;m currently looking for a digital artist to make
