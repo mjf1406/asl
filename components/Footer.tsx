@@ -44,8 +44,13 @@ const Footer = () => {
                 ))}
             </div>
 
-            <div className=" text-sm font-[family-name:var(--font-geist-mono)]">
-                © {new Date().getFullYear()} MIT Licensed
+            <div className="text-2xs font-[family-name:var(--font-geist-mono)] flex flex-col gap-2 items-center justify-center">
+                <div className="">
+                    Code is © {new Date().getFullYear()} MIT Licensed
+                </div>
+                <div className="">
+                    Art is © {new Date().getFullYear()} CC BY-NC 4.0 Licensed
+                </div>
             </div>
         </footer>
     );

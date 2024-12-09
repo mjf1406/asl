@@ -21,6 +21,7 @@
 
 2024/12/09
 
+-   added code and art licenses to the footer
 -   added tooltip to "V2 soon!" when talking about MagniText
 -   added a feedback link to a Google Form
 -   added a warning in case the screen is too small and too many columns were added
