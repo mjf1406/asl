@@ -14,7 +14,6 @@ export type Sign = {
     category: Category;
 };
 export const signs: Sign[] = [
-    // Classroom Management
     {
         id: 1,
         sign: "hand-peace-solid",
@@ -82,7 +81,6 @@ export const signs: Sign[] = [
         category: "Classroom Management",
     },
 
-    // Requests
     {
         id: 12,
         sign: "hands-helping-solid",
@@ -144,7 +142,6 @@ export const signs: Sign[] = [
         category: "Requests",
     },
 
-    // Responses/Actions
     {
         id: 22,
         sign: "reply-solid",
@@ -200,7 +197,6 @@ export const signs: Sign[] = [
         category: "Responses/Actions",
     },
 
-    // Learning Levels
     {
         id: 31,
         sign: "star-solid",
@@ -226,7 +222,6 @@ export const signs: Sign[] = [
         category: "Learning Levels",
     },
 
-    // Emotions & Social-Emotional Signs
     {
         id: 35,
         sign: "face-smile-solid",
@@ -282,7 +277,6 @@ export const signs: Sign[] = [
         category: "Emotions & Social-Emotional Signs",
     },
 
-    // Encouragement & Connection
     {
         id: 44,
         sign: "thumbs-up-solid",
@@ -314,7 +308,6 @@ export const signs: Sign[] = [
         category: "Encouragement & Connection",
     },
 
-    // Time & Sequence
     {
         id: 49,
         sign: "clock-rotate-left-solid",
