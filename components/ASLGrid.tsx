@@ -259,44 +259,6 @@ const ASLGrid = () => {
                     onCustomColorChange={setCustomColor}
                 />
             </div>
-
-            {/* Action Buttons */}
-            <div className="space-y-2">
-                <div className="text-sm text-center">
-                    Click the signs that you want, else click none to get them
-                    all!
-                </div>
-                <div className="flex items-center justify-center gap-3 sm:text-base text-xl">
-                    {/* Print Button to open the dialog */}
-                    <Button
-                        onClick={handlePrint}
-                        className="h-10"
-                    >
-                        <PrinterIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)]">
-                            Print
-                        </span>
-                    </Button>
-                    <Button
-                        onClick={handleDownloadGrid}
-                        className="h-10"
-                    >
-                        <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)]">
-                            Download Grid
-                        </span>
-                    </Button>
-                    <Button
-                        onClick={handleDownloadEach}
-                        className="h-10"
-                    >
-                        <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)]">
-                            Download Each
-                        </span>
-                    </Button>
-                </div>
-            </div>
             {/* Customization Controls */}
             <div className="flex flex-col md:flex-row items-center justify-center md:items-center space-y-4 md:space-y-0 md:space-x-6">
                 {/* Number of Columns */}
