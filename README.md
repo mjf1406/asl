@@ -16,8 +16,9 @@
 
 -   get art 🥺
 -   can filter signs by category
--   can download just the SVGs for the grid
+-   can download just the icons, which opens a dropdown to determine the file type to download: Download Icons
 -   need loading spinners on the download buttons
+-   change Download Each to Download Cards
 
 ## Change Log
 
