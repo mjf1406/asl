@@ -16,6 +16,8 @@
 
 -   get art 🥺
 -   can filter signs by category
+-   can download just the SVGs for the grid
+-   need loading spinners on the download buttons
 
 ## Change Log
 
