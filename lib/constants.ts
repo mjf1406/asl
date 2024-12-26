@@ -22,7 +22,7 @@ export const signs: Sign[] = [
     },
     {
         id: 2,
-        sign: "hand-scissors-solid",
+        sign: "sit",
         meaning: "Sit",
         category: "Classroom Management",
     },
@@ -101,19 +101,19 @@ export const signs: Sign[] = [
     },
     {
         id: 15,
-        sign: "box-tissue-solid",
+        sign: "tissue",
         meaning: "Tissue",
         category: "Requests",
     },
     {
         id: 16,
-        sign: "toilet-solid",
+        sign: "toilet",
         meaning: "Toilet",
         category: "Requests",
     },
     {
         id: 17,
-        sign: "hands-bubbles-solid",
+        sign: "wash",
         meaning: "Wash",
         category: "Requests",
     },
@@ -144,7 +144,7 @@ export const signs: Sign[] = [
 
     {
         id: 22,
-        sign: "reply-solid",
+        sign: "answer",
         meaning: "Answer",
         category: "Responses/Actions",
     },
@@ -162,7 +162,7 @@ export const signs: Sign[] = [
     },
     {
         id: 25,
-        sign: "check-solid",
+        sign: "yes",
         meaning: "Yes",
         category: "Responses/Actions",
     },
