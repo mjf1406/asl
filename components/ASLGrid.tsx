@@ -10,12 +10,20 @@ import SkinToneSelector, {
 import { signs } from "@/lib/constants";
 import { getSignIcon } from "@/app/asl-icons/getSignIcon";
 import { Button } from "./ui/button";
-import { CircleAlert, DownloadIcon, PrinterIcon } from "lucide-react";
+import {
+    CircleAlert,
+    Download,
+    FileDown,
+    Grid,
+    Layout,
+    Loader,
+    PrinterIcon,
+} from "lucide-react";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
-// Import ShadCN Dialog components
+// ShadCN Dialog
 import {
     Dialog,
     DialogContent,
@@ -23,7 +31,16 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter,
-} from "@/components/ui/dialog"; // Adjust the import path based on your project structure
+} from "@/components/ui/dialog";
+
+// ShadCN Dropdown
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 
 type SVGComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
@@ -39,19 +56,27 @@ const ASLGrid = () => {
     >({});
     const [selectedCards, setSelectedCards] = useState<Set<number>>(new Set());
 
-    // New state variables for the print dialog
+    // Print dialog
     const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
     const [printTitle, setPrintTitle] = useState("");
     const [printSubtitle, setPrintSubtitle] = useState("");
 
-    // New state variables for customization
+    // Customization
     const [numColumns, setNumColumns] = useState<number>(4); // Default to 4 columns
     const [cardSize, setCardSize] = useState<
         "very-small" | "small" | "medium" | "large" | "very-large"
     >("medium"); // Default to medium
 
+    // New: stroke size
+    const [strokeSize, setStrokeSize] = useState<number>(5); // default stroke width
+
     const gridRef = useRef<HTMLDivElement>(null);
     const printableRef = useRef<HTMLDivElement>(null);
+
+    // NEW / UPDATED: Loading states for each download button
+    const [isLoadingGrid, setIsLoadingGrid] = useState(false);
+    const [isLoadingCards, setIsLoadingCards] = useState(false);
+    const [isLoadingIcons, setIsLoadingIcons] = useState(false);
 
     useEffect(() => {
         const loadSigns = async () => {
@@ -91,7 +116,7 @@ const ASLGrid = () => {
     const handleSkinToneChange = (tone: SkinTone) => {
         setSelectedTone(tone);
         if (tone === "random") {
-            // Increment the key to force new random generation
+            // Force new random generation
             setRandomKey((prev) => prev + 1);
         }
     };
@@ -122,6 +147,7 @@ const ASLGrid = () => {
         });
     };
 
+    // Print Flow
     const handlePrint = () => {
         setIsPrintDialogOpen(true);
     };
@@ -131,42 +157,44 @@ const ASLGrid = () => {
         if (!printableContent) return;
 
         const printWindow = window.open("", "PRINT", "height=600,width=800");
-
         if (printWindow) {
             printWindow.document.write(
                 "<html><head><title>Print ASL Signs</title>"
             );
             // Include necessary styles
-            printWindow.document.write(
-                `<style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                    .print-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-                    .print-subtitle { text-align: center; font-size: 18px; margin-bottom: 20px; }
-                    .print-grid { display: grid; grid-template-columns: repeat(${numColumns}, 1fr); gap: 20px; }
-                    .print-card { border: 1px solid #ccc; padding: 10px; text-align: center; }
-                    .print-card svg { width: ${
-                        cardSize === "very-small"
-                            ? "60px"
-                            : cardSize === "small"
-                            ? "80px"
-                            : cardSize === "large"
-                            ? "120px"
-                            : cardSize === "very-large"
-                            ? "160px"
-                            : "100px"
-                    }; height: ${
-                    cardSize === "very-small"
-                        ? "60px"
-                        : cardSize === "small"
-                        ? "80px"
-                        : cardSize === "large"
-                        ? "120px"
-                        : cardSize === "very-large"
-                        ? "160px"
-                        : "100px"
-                }; }
-                </style>`
-            );
+            printWindow.document.write(`
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          .print-title { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+          .print-subtitle { text-align: center; font-size: 18px; margin-bottom: 20px; }
+          .print-grid { display: grid; grid-template-columns: repeat(${numColumns}, 1fr); gap: 20px; }
+          .print-card { border: 1px solid #ccc; padding: 10px; text-align: center; }
+          .print-card svg { 
+            width: ${
+                cardSize === "very-small"
+                    ? "60px"
+                    : cardSize === "small"
+                    ? "80px"
+                    : cardSize === "large"
+                    ? "120px"
+                    : cardSize === "very-large"
+                    ? "160px"
+                    : "100px"
+            };
+            height: ${
+                cardSize === "very-small"
+                    ? "60px"
+                    : cardSize === "small"
+                    ? "80px"
+                    : cardSize === "large"
+                    ? "120px"
+                    : cardSize === "very-large"
+                    ? "160px"
+                    : "100px"
+            };
+          }
+        </style>
+      `);
             printWindow.document.write("</head><body>");
             // Insert title and subtitle
             printWindow.document.write(
@@ -185,66 +213,194 @@ const ASLGrid = () => {
         }
     };
 
+    // Download the entire grid as one PNG
     const handleDownloadGrid = async () => {
-        if (!gridRef.current) return;
-
-        // Capture the grid using html2canvas
-        const canvas = await html2canvas(gridRef.current, {
-            backgroundColor: null, // Transparent background
-            scale: 2, // Increase resolution
-        });
-
-        // Convert canvas to PNG blob
-        canvas.toBlob((blob) => {
-            if (blob) {
-                saveAs(blob, "ASL_Grid.png");
-            }
-        }, "image/png");
+        // NEW / UPDATED: show loading
+        setIsLoadingGrid(true);
+        try {
+            if (!gridRef.current) return;
+            const canvas = await html2canvas(gridRef.current, {
+                backgroundColor: null, // Transparent
+                scale: 2,
+            });
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    saveAs(blob, "ASL_Grid.png");
+                }
+            }, "image/png");
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoadingGrid(false);
+        }
     };
 
+    // Download each selected card (or all if none selected)
     const handleDownloadEach = async () => {
-        const zip = new JSZip();
-        const cards = Array.from(
-            gridRef.current?.querySelectorAll(".download-card") || []
-        );
-
-        const selectedOrAllCards = selectedCards.size
-            ? cards.filter((card) => {
-                  const signId = Number(card.getAttribute("data-sign-id"));
-                  return selectedCards.has(signId);
-              })
-            : cards;
-
-        if (selectedOrAllCards.length === 0) {
-            alert("No cards to download.");
-            return;
-        }
-
-        // Iterate over each card and add to ZIP
-        for (const card of selectedOrAllCards) {
-            const canvas = await html2canvas(card as HTMLElement, {
-                backgroundColor: null, // Ensure transparency
-                scale: 2, // Increase resolution
-            });
-
-            // Convert canvas to PNG blob
-            const blob = await new Promise<Blob | null>((resolve) =>
-                canvas.toBlob(resolve, "image/png")
+        // NEW / UPDATED: show loading
+        setIsLoadingCards(true);
+        try {
+            if (!gridRef.current) return;
+            const zip = new JSZip();
+            const cards = Array.from(
+                gridRef.current.querySelectorAll(".download-card") || []
             );
 
-            if (blob) {
-                const signId = card.getAttribute("data-sign-id");
-                const signMeaning = card.getAttribute("data-sign-meaning");
-                zip.file(`${signMeaning}_${signId}.png`, blob, {
-                    binary: true,
-                });
-            }
-        }
+            const selectedOrAllCards = selectedCards.size
+                ? cards.filter((card) => {
+                      const signId = Number(card.getAttribute("data-sign-id"));
+                      return selectedCards.has(signId);
+                  })
+                : cards;
 
-        // Generate ZIP and trigger download
-        zip.generateAsync({ type: "blob" }).then((content) => {
+            if (selectedOrAllCards.length === 0) {
+                alert("No cards to download.");
+                return;
+            }
+
+            for (const card of selectedOrAllCards) {
+                const canvas = await html2canvas(card as HTMLElement, {
+                    backgroundColor: null,
+                    scale: 2,
+                });
+                const blob = await new Promise<Blob | null>((resolve) =>
+                    canvas.toBlob(resolve, "image/png")
+                );
+
+                if (blob) {
+                    const signId = card.getAttribute("data-sign-id");
+                    const signMeaning = card.getAttribute("data-sign-meaning");
+                    zip.file(`${signMeaning}_${signId}.png`, blob, {
+                        binary: true,
+                    });
+                }
+            }
+
+            const content = await zip.generateAsync({ type: "blob" });
             saveAs(content, "ASL_Signs.zip");
-        });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoadingCards(false);
+        }
+    };
+
+    // Download *only* the SignSVG (in PNG, or SVG)
+    const handleDownloadIcons = async (format: "png" | "svg") => {
+        // NEW / UPDATED: show loading
+        setIsLoadingIcons(true);
+
+        try {
+            if (!gridRef.current) return;
+            const zip = new JSZip();
+            const signElements = Array.from(
+                gridRef.current.querySelectorAll(".download-card") || []
+            );
+
+            // If user has selected cards, only download those. Otherwise, download all.
+            const selectedOrAllCards = selectedCards.size
+                ? signElements.filter((el) => {
+                      const signId = Number(el.getAttribute("data-sign-id"));
+                      return selectedCards.has(signId);
+                  })
+                : signElements;
+
+            if (selectedOrAllCards.length === 0) {
+                alert("No icons to download.");
+                return;
+            }
+
+            for (const el of selectedOrAllCards) {
+                const signId = Number(el.getAttribute("data-sign-id"));
+                const signMeaning =
+                    el.getAttribute("data-sign-meaning") || "asl_sign";
+                const SignSVG = signComponents[signId];
+                if (!SignSVG) continue;
+
+                // 1) Grab the actual <svg> element from the card.
+                const existingSVG = el.querySelector("svg");
+                if (!existingSVG) continue;
+
+                // If user wants .svg format, just clone the raw svg markup directly.
+                if (format === "svg") {
+                    const clonedSVG = existingSVG.cloneNode(
+                        true
+                    ) as SVGSVGElement;
+                    // Save in the zip
+                    zip.file(
+                        `${signMeaning}_${signId}.svg`,
+                        clonedSVG.outerHTML
+                    );
+                } else {
+                    // For PNG, we can rasterize the *SVG only* inside a small container
+                    // rather than the entire card.
+                    const wrapper = document.createElement("div");
+                    wrapper.style.display = "inline-block";
+                    wrapper.style.backgroundColor = "transparent";
+                    document.body.appendChild(wrapper);
+
+                    // Clone the existing svg so we can style it as we like
+                    const clonedSVG = existingSVG.cloneNode(
+                        true
+                    ) as SVGSVGElement;
+
+                    // Optionally, we can tweak the width/height before we append
+                    let svgSize = 100;
+                    switch (cardSize) {
+                        case "very-small":
+                            svgSize = 60;
+                            break;
+                        case "small":
+                            svgSize = 80;
+                            break;
+                        case "medium":
+                            svgSize = 100;
+                            break;
+                        case "large":
+                            svgSize = 120;
+                            break;
+                        case "very-large":
+                            svgSize = 160;
+                            break;
+                        default:
+                            svgSize = 100;
+                    }
+                    clonedSVG.setAttribute("width", svgSize.toString());
+                    clonedSVG.setAttribute("height", svgSize.toString());
+
+                    wrapper.appendChild(clonedSVG);
+
+                    // Now rasterize it
+                    const canvas = await html2canvas(wrapper, {
+                        backgroundColor: null,
+                        scale: 2,
+                    });
+
+                    // Convert canvas to requested format
+                    const mimeType = "image/png";
+                    const blob = await new Promise<Blob | null>((resolve) =>
+                        canvas.toBlob(resolve, mimeType, 1)
+                    );
+
+                    if (blob) {
+                        zip.file(`${signMeaning}_${signId}.${format}`, blob, {
+                            binary: true,
+                        });
+                    }
+
+                    // Clean up
+                    document.body.removeChild(wrapper);
+                }
+            }
+
+            // Generate ZIP and trigger download
+            const content = await zip.generateAsync({ type: "blob" });
+            saveAs(content, `ASL_Icons_${format.toUpperCase()}.zip`);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoadingIcons(false);
+        }
     };
 
     return (
@@ -259,8 +415,9 @@ const ASLGrid = () => {
                     onCustomColorChange={setCustomColor}
                 />
             </div>
+
             {/* Customization Controls */}
-            <div className="flex flex-col md:flex-row items-center justify-center md:items-center space-y-4 md:space-y-0 md:space-x-6">
+            <div className="flex flex-col md:flex-row flex-wrap items-start md:items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
                 {/* Number of Columns */}
                 <div className="flex flex-col">
                     <label
@@ -315,7 +472,33 @@ const ASLGrid = () => {
                         <option value="very-large">Very Large</option>
                     </select>
                 </div>
+
+                {/* Stroke Size */}
+                <div className="flex flex-col">
+                    <label
+                        htmlFor="strokeSize"
+                        className="text-sm font-medium"
+                    >
+                        Stroke Size
+                    </label>
+                    <select
+                        id="strokeSize"
+                        value={strokeSize}
+                        onChange={(e) => setStrokeSize(Number(e.target.value))}
+                        className="mt-1 p-2 border border-gray-300 rounded"
+                    >
+                        {[...Array(21).keys()].map((val) => (
+                            <option
+                                key={val}
+                                value={val}
+                            >
+                                {val}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
+
             {numColumns >= 6 && (
                 <div className="w-full flex items-center justify-center lg:hidden">
                     <div className="mt-5 flex w-fit items-center justify-center gap-2 rounded-xl bg-orange-400/50 border-2 border-orange-600">
@@ -333,6 +516,7 @@ const ASLGrid = () => {
                     </div>
                 </div>
             )}
+
             {/* ASL Signs Grid */}
             <div
                 className="grid gap-4"
@@ -354,10 +538,8 @@ const ASLGrid = () => {
                     const skinTone = getSkinToneForSign(sign.id);
                     const isSelected = selectedCards.has(sign.id);
 
-                    // Define card size classes or styles based on cardSize
                     let sizeClasses = "";
                     let svgSize = 100; // Default
-
                     switch (cardSize) {
                         case "very-small":
                             sizeClasses = "p-2";
@@ -409,7 +591,7 @@ const ASLGrid = () => {
                                             style={{
                                                 fill: skinTone,
                                                 stroke: "#000",
-                                                strokeWidth: 5,
+                                                strokeWidth: strokeSize,
                                             }}
                                             onError={() =>
                                                 handleImageError(sign.id)
@@ -443,35 +625,123 @@ const ASLGrid = () => {
                     Click the signs that you want, else click none to get them
                     all!
                 </div>
+
                 <div className="flex items-center justify-center gap-3 sm:text-base text-xl">
-                    {/* Print Button to open the dialog */}
+                    {/* Print Button */}
                     <Button
                         onClick={handlePrint}
-                        className="h-10"
+                        variant={"secondary"}
+                        className="h-14 grow"
                     >
-                        <PrinterIcon className="!w-6 !h-6" />{" "}
+                        <PrinterIcon className="!w-6 !h-6" />
                         <span className="font-[family-name:var(--font-fredoka)]">
                             Print
                         </span>
                     </Button>
-                    <Button
-                        onClick={handleDownloadGrid}
-                        className="h-10"
-                    >
-                        <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)]">
-                            Download Grid
-                        </span>
-                    </Button>
-                    <Button
-                        onClick={handleDownloadEach}
-                        className="h-10"
-                    >
-                        <DownloadIcon className="!w-6 !h-6" />{" "}
-                        <span className="font-[family-name:var(--font-fredoka)]">
-                            Download Each
-                        </span>
-                    </Button>
+
+                    {/* New Segmented Download Controls */}
+                    <div className="flex gap-2 items-center justify-start bg-primary py-2 px-4 rounded-md">
+                        <div className="flex gap-2 items-center justify-center font-[family-name:var(--font-fredoka)]">
+                            <Download className="!w-6 !h-6" /> Download
+                        </div>
+                        <div className="inline-flex rounded-lg border bg-card text-card-foreground shadow">
+                            {/* Download Grid Button */}
+                            <Button
+                                variant="ghost"
+                                className="rounded-none rounded-l-lg border-r hover:bg-accent h-10"
+                                onClick={handleDownloadGrid}
+                                disabled={isLoadingGrid}
+                            >
+                                {isLoadingGrid ? (
+                                    <div className="flex items-center gap-2">
+                                        <Loader className="w-4 h-4 animate-spin" />
+                                        <span className="font-[family-name:var(--font-fredoka)]">
+                                            Grid
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <Grid className="w-4 h-4" />
+                                        <span className="font-[family-name:var(--font-fredoka)]">
+                                            Grid
+                                        </span>
+                                    </div>
+                                )}
+                            </Button>
+
+                            {/* Download Cards Button */}
+                            <Button
+                                variant="ghost"
+                                className="rounded-none border-r hover:bg-accent h-10"
+                                onClick={handleDownloadEach}
+                                disabled={isLoadingCards}
+                            >
+                                {isLoadingCards ? (
+                                    <div className="flex items-center gap-2">
+                                        <Loader className="w-4 h-4 animate-spin" />
+                                        <span className="font-[family-name:var(--font-fredoka)]">
+                                            Cards
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <Layout className="w-4 h-4" />
+                                        <span className="font-[family-name:var(--font-fredoka)]">
+                                            Cards
+                                        </span>
+                                    </div>
+                                )}
+                            </Button>
+
+                            {/* Download Icons Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="rounded-none rounded-r-lg hover:bg-accent h-10"
+                                        disabled={isLoadingIcons}
+                                    >
+                                        {isLoadingIcons ? (
+                                            <div className="flex items-center gap-2">
+                                                <Loader className="w-4 h-4 animate-spin" />
+                                                <span className="font-[family-name:var(--font-fredoka)]">
+                                                    Icons
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <FileDown className="w-4 h-4" />
+                                                <span className="font-[family-name:var(--font-fredoka)]">
+                                                    Icons
+                                                </span>
+                                            </div>
+                                        )}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>
+                                        Download Format
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            handleDownloadIcons("png")
+                                        }
+                                    >
+                                        <Download className="w-4 h-4 mr-2" />
+                                        PNG Format
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() =>
+                                            handleDownloadIcons("svg")
+                                        }
+                                    >
+                                        <Download className="w-4 h-4 mr-2" />
+                                        SVG Format
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -539,7 +809,6 @@ const ASLGrid = () => {
                 className="hidden"
                 ref={printableRef}
             >
-                {/* The title and subtitle are dynamically inserted in the print window */}
                 <div className="print-grid">
                     {signs
                         .filter(
@@ -551,12 +820,10 @@ const ASLGrid = () => {
                             if (failedImages.has(sign.id)) {
                                 return null;
                             }
-
                             const SignSVG = signComponents[sign.id];
                             if (!SignSVG) {
                                 return null;
                             }
-
                             const skinTone = getSkinToneForSign(sign.id);
 
                             return (
@@ -590,7 +857,7 @@ const ASLGrid = () => {
                                         style={{
                                             fill: skinTone,
                                             stroke: "#000",
-                                            strokeWidth: 2,
+                                            strokeWidth: strokeSize,
                                         }}
                                         aria-label={`ASL sign for ${sign.meaning}`}
                                     />

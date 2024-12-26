@@ -7,6 +7,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import ArtistsGrid from "@/components/ArtistsGrid";
 
 export default function Home() {
     return (
@@ -110,7 +111,7 @@ export default function Home() {
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            Two teachers who love to program and make art
+                            A teacher who love to program and some artists
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>{" "}
@@ -187,6 +188,10 @@ export default function Home() {
                 </a>
                 .
             </p>
+            <div className="max-w-xl mt-10">
+                <h2 className="text-center text-2xl">Meet the Artists</h2>
+                <ArtistsGrid />
+            </div>
             <div className="max-w-xl">
                 <div className="space-y-4 mt-10">
                     <h2 className="text-center text-2xl">Silence Is Golden</h2>
@@ -264,8 +269,7 @@ export default function Home() {
                         >
                             Ko-fi
                         </a>
-                        . We split every donation 50-50. We hope you found this
-                        useful! If you donated, thank you kindly 😊
+                        . If you donated, thank you kindly 😊
                     </p>
                 </div>
             </div>

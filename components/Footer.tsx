@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Code2Icon, CodeIcon, Palette } from "lucide-react";
+import { Code2Icon, CodeIcon } from "lucide-react";
 
 const Footer = () => {
     // Define the links with label in plain English
@@ -8,11 +8,6 @@ const Footer = () => {
             href: "https://mr-monkey-portfolio.vercel.app/",
             label: "Meet the Dev",
             icon: <CodeIcon className="h-4 w-4" />,
-        },
-        {
-            href: "", // TODO: Need artist's LinkedIn or Portfolio
-            label: "Meet the Artist",
-            icon: <Palette className="h-4 w-4" />,
         },
         {
             href: "https://github.com/mjf1406/asl",

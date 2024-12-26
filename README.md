@@ -16,11 +16,21 @@
 
 -   get art 🥺
 -   can filter signs by category
--   can download just the icons, which opens a dropdown to determine the file type to download: Download Icons
--   need loading spinners on the download buttons
--   change Download Each to Download Cards
 
 ## Change Log
+
+UI = User Interface
+UX = User Experience
+BK = Background Knowledge
+
+2024/12/26
+
+-   UI: added stroke size as options
+-   UX: Can download just the icons now as PNGs or SVGs
+-   UI: added loading spinners to download buttons
+-   UI: redesigned how the download buttons look
+-   UI: added a Meet the Artists section
+-   BK: learned that I need to Save as in Inkscape as Optimized SVG to get the SVG output that I need
 
 2024/12/09
 
