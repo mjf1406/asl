@@ -16,6 +16,12 @@
 
 -   get art 🥺
 -   can filter signs by category
+-   fixed: there is no longer a subject-verb agreement error in the We popover.
+-   added a donation amount and people counter.
+-   added an Idea feedback type to the survey.
+-   made the survey open in a new tab.
+-   added expainers for the different ways to download.
+-   
 
 ## Change Log
 
