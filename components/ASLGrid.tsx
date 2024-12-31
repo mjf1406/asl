@@ -417,7 +417,7 @@ const ASLGrid = () => {
             </div>
 
             {/* Customization Controls */}
-            <div className="flex flex-col md:flex-row flex-wrap items-start md:items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
+            <div className="flex flex-col md:flex-row flex-wrap items-center md:items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
                 {/* Number of Columns */}
                 <div className="flex flex-col">
                     <label
@@ -626,7 +626,7 @@ const ASLGrid = () => {
                     all!
                 </div>
 
-                <div className="flex items-center justify-center gap-3 sm:text-base text-xl">
+                <div className="flex md:flex-row flex-col items-center justify-center gap-3 sm:text-base text-xl">
                     {/* Print Button */}
                     <Button
                         onClick={handlePrint}
@@ -638,7 +638,6 @@ const ASLGrid = () => {
                             Print
                         </span>
                     </Button>
-
                     {/* New Segmented Download Controls */}
                     <div className="flex gap-2 items-center justify-start bg-primary py-2 px-4 rounded-md">
                         <div className="flex gap-2 items-center justify-center font-[family-name:var(--font-fredoka)]">
