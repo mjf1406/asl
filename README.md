@@ -21,13 +21,18 @@
 -   added an Idea feedback type to the survey.
 -   made the survey open in a new tab.
 -   added expainers for the different ways to download.
--   
+-
 
 ## Change Log
 
 UI = User Interface
 UX = User Experience
 BK = Background Knowledge
+
+2024/12/31
+
+-   UI: improved mobile support, but it's basic
+-   Signs: add 6 signs: sit, tissue, toilet, wash, answer, yes
 
 2024/12/26
 
