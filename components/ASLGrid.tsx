@@ -277,7 +277,7 @@ const ASLGrid = () => {
             }
 
             const content = await zip.generateAsync({ type: "blob" });
-            saveAs(content, "ASL_Signs.zip");
+            saveAs(content, "ASL_Cards.zip");
         } catch (error) {
             console.error(error);
         } finally {

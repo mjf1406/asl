@@ -42,7 +42,7 @@ export const signs: Sign[] = [
     },
     {
         id: 4,
-        sign: "line-up",
+        sign: "sit-old",
         meaning: "Line Up",
         category: "Classroom Management",
         author: "",
@@ -50,7 +50,7 @@ export const signs: Sign[] = [
     },
     {
         id: 5,
-        sign: "circle-inkscape",
+        sign: "answer-new",
         meaning: "Clean Up",
         category: "Classroom Management",
         author: "",
@@ -98,7 +98,7 @@ export const signs: Sign[] = [
     },
     {
         id: 11,
-        sign: "check-double-solid",
+        sign: "answer-again",
         meaning: "Ready",
         category: "Classroom Management",
         author: "",
@@ -171,7 +171,7 @@ export const signs: Sign[] = [
     },
     {
         id: 20,
-        sign: "pause-solid",
+        sign: "answer-old",
         meaning: "Break",
         category: "Requests",
         author: "",
