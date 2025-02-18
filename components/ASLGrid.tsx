@@ -406,7 +406,7 @@ const ASLGrid = () => {
     return (
         <div className="container mx-auto p-6 space-y-10">
             {/* Skin Tone Selector and Customization Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 space-y-4 md:space-y-0">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 mb-4">
                 {/* Skin Tone Selector */}
                 <SkinToneSelector
                     selectedTone={selectedTone}

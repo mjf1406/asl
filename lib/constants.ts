@@ -422,4 +422,20 @@ export const signs: Sign[] = [
         author: "Ekaraksasa",
         author_links: ["https://www.fiverr.com/ekaraksasa"]
     },
+    {
+        id: 51,
+        sign: "No1",
+        meaning: "TEST - No1",
+        category: "Time & Sequence",
+        author: "Ekaraksasa",
+        author_links: ["https://www.fiverr.com/ekaraksasa"]
+    },
+    {
+        id: 52,
+        sign: "No2",
+        meaning: "TEST - No2",
+        category: "Time & Sequence",
+        author: "Ekaraksasa",
+        author_links: ["https://www.fiverr.com/ekaraksasa"]
+    },
 ];

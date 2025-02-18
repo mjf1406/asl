@@ -1,3 +1,5 @@
+// ColorPicker.tsx
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -26,6 +28,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     const [rgba, setRgba] = useState({ r: 0, g: 0, b: 0, a: 1 });
     const [hsla, setHsla] = useState({ h: 0, s: 0, l: 0, a: 1 });
 
+    // Removed popoverRef as manual focus is no longer needed
+    // const popoverRef = useRef<HTMLDivElement>(null);
+
     const updateAllFormats = useCallback((hexColor: string) => {
         const rgbaColor = hexToRgba(hexColor);
         setRgba(rgbaColor);
@@ -40,16 +45,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         if (!hex) return { r: 0, g: 0, b: 0, a: 1 };
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         if (!result) return { r: 0, g: 0, b: 0, a: 1 };
-        if (!result[1] || !result[2] || !result[3])
-            return { r: 0, g: 0, b: 0, a: 1 };
-        return result
-            ? {
-                  r: parseInt(result[1], 16),
-                  g: parseInt(result[2], 16),
-                  b: parseInt(result[3], 16),
-                  a: 1,
-              }
-            : { r: 0, g: 0, b: 0, a: 1 };
+        return {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16),
+            a: 1,
+        };
     };
 
     const rgbaToHex = ({ r, g, b }: { r: number; g: number; b: number }) => {
@@ -142,30 +143,61 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     }) => {
         s /= 100;
         l /= 100;
-        const k = (n: number) => (n + h / 30) % 12;
-        const f = (n: number) =>
-            l -
-            s *
-                Math.min(l, 1 - l) *
-                Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-        return {
-            r: Math.round(255 * f(0)),
-            g: Math.round(255 * f(8)),
-            b: Math.round(255 * f(4)),
-            a,
-        };
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+        const m = l - c / 2;
+        let rPrime = 0,
+            gPrime = 0,
+            bPrime = 0;
+
+        if (h >= 0 && h < 60) {
+            rPrime = c;
+            gPrime = x;
+            bPrime = 0;
+        } else if (h >= 60 && h < 120) {
+            rPrime = x;
+            gPrime = c;
+            bPrime = 0;
+        } else if (h >= 120 && h < 180) {
+            rPrime = 0;
+            gPrime = c;
+            bPrime = x;
+        } else if (h >= 180 && h < 240) {
+            rPrime = 0;
+            gPrime = x;
+            bPrime = c;
+        } else if (h >= 240 && h < 300) {
+            rPrime = x;
+            gPrime = 0;
+            bPrime = c;
+        } else if (h >= 300 && h < 360) {
+            rPrime = c;
+            gPrime = 0;
+            bPrime = x;
+        }
+
+        const r = Math.round((rPrime + m) * 255);
+        const g = Math.round((gPrime + m) * 255);
+        const b = Math.round((bPrime + m) * 255);
+
+        return { r, g, b, a };
     };
 
     const handlePopoverOpenChange = (isOpen: boolean) => {
         setOpen(isOpen);
         if (!isOpen) {
-            // User closed the popover, update the final selected color
             onSelectColor(currentColor);
         }
     };
 
     return (
-        <div onClick={(e) => e.stopPropagation()}>
+        <div
+            onClick={(e) => {
+                e.stopPropagation();
+                // Removed e.preventDefault() to avoid interfering with default behavior
+            }}
+            className="relative inline-block"
+        >
             <Popover
                 open={open}
                 onOpenChange={handlePopoverOpenChange}
@@ -183,8 +215,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                     </Button>
                 </PopoverTrigger>
                 <PopoverContentInline
-                    className="w-[300px]"
+                    className="w-[300px] focus:outline-none"
                     onClick={(e) => e.stopPropagation()}
+                    tabIndex={-1} // Make it focusable
                 >
                     <Tabs defaultValue="hex">
                         <TabsList className="grid w-full grid-cols-3 bg-secondary text-foreground">

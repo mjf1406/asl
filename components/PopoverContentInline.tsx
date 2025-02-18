@@ -4,11 +4,10 @@
 
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { cn } from "@/lib/utils"; // Adjust the import path based on your project structure
+import { cn } from "@/lib/utils"; // Ensure this utility is correctly implemented
 
 interface PopoverContentInlineProps
     extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> {
-    // You can extend or add custom props here if needed
     foo?: boolean;
 }
 
@@ -20,9 +19,8 @@ const PopoverContentInline = React.forwardRef<
         ref={ref}
         align={align}
         sideOffset={sideOffset}
-        // Adjust the class names as per your styling requirements
         className={cn(
-            "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in",
+            "z-[1000] w-72 rounded-md border bg-white p-4 text-black shadow-md outline-none", // Increased z-index to 1000
             className
         )}
         {...props}
