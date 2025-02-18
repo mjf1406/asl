@@ -1,4 +1,6 @@
-import { TriangleAlert } from "lucide-react";
+/** @format */
+
+import { ExternalLink, TriangleAlert } from "lucide-react";
 import ASLGrid from "../components/ASLGrid";
 import Footer from "../components/Footer";
 import {
@@ -8,6 +10,8 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ArtistsGrid from "@/components/ArtistsGrid";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -111,7 +115,8 @@ export default function Home() {
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            A teacher who love to program and some artists
+                            A teacher who loves to program and a freelance
+                            Fiverr artist
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>{" "}
@@ -135,12 +140,14 @@ export default function Home() {
             </p>
             <p className="mb-5">
                 Please submit feedback{" "}
-                <a
+                <Link
                     className="link"
                     href="https://docs.google.com/forms/d/e/1FAIpQLScMUvCMbTa_TYFHoaWJFMSDukShHBcqZaw3mb1Jp8i6Yw5azw/viewform?usp=header"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    here
-                </a>
+                    here <ExternalLink className="inline w-4 h-4" />
+                </Link>
                 .
             </p>
             <div className="block md:hidden">
@@ -159,7 +166,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="mt-5 flex max-w-2xl items-center justify-center gap-2 rounded-xl bg-yellow-400/50 border-2 border-yellow-600">
+            {/* <div className="mt-5 flex max-w-2xl items-center justify-center gap-2 rounded-xl bg-yellow-400/50 border-2 border-yellow-600">
                 <div className="rounded-l-xl bg-yellow-400 p-4">
                     <TriangleAlert size={48} />
                 </div>
@@ -174,7 +181,7 @@ export default function Home() {
                         art for free under the CC BY-NC 4.0 license.
                     </p>
                 </div>
-            </div>
+            </div> */}
             <main className="flex flex-col row-start-2 items-center sm:items-start">
                 <ASLGrid />
             </main>
@@ -188,6 +195,61 @@ export default function Home() {
                 </a>
                 .
             </p>
+            <div className="max-w-xl mt-10">
+                <h2 className="text-center text-2xl">
+                    Supplementary Materials
+                </h2>
+                <p className="mt-3">
+                    Enjoy any of the pre-made resources to help your kids learn
+                    all the signs on this site!
+                </p>
+                <div className="flex gap-5 justify-center items-center w-full mx-auto mt-5">
+                    <Link href={""}>
+                        <Image
+                            width={300}
+                            height={100}
+                            src={
+                                "https://www.gimkit.com/client/img/svgLogo.svg"
+                            }
+                            alt="GimKit"
+                            className="hover:bg-secondary p-3 rounded-2xl"
+                        />
+                    </Link>
+                    <Link href={""}>
+                        <Image
+                            width={300}
+                            height={100}
+                            src={
+                                "https://upload.wikimedia.org/wikipedia/commons/4/4d/Kahoot_Logo.svg"
+                            }
+                            alt="Kahoot!"
+                            className="hover:bg-secondary p-3 rounded-2xl"
+                        />
+                    </Link>
+                    <Link href={""}>
+                        <Image
+                            width={300}
+                            height={100}
+                            src={
+                                "https://logosarchive.com/wp-content/uploads/2022/01/Blooket-logo.svg"
+                            }
+                            alt="GimKit"
+                            className="hover:bg-secondary p-3 rounded-2xl"
+                        />
+                    </Link>
+                    <Link href={""}>
+                        <Image
+                            width={300}
+                            height={100}
+                            src={
+                                "https://upload.wikimedia.org/wikipedia/commons/0/06/Quizlet_Logo.svg"
+                            }
+                            alt="Quizlet"
+                            className="hover:bg-secondary p-3 rounded-2xl"
+                        />
+                    </Link>
+                </div>
+            </div>
             <div className="max-w-xl mt-10">
                 <h2 className="text-center text-2xl">Meet the Artists</h2>
                 <ArtistsGrid />
@@ -269,7 +331,8 @@ export default function Home() {
                         >
                             Ko-fi
                         </a>
-                        . If you donated, thank you kindly 😊
+                        . If you donated, thank you kindly 😊 All donations go
+                        to covering the costs of the icons and hosting the site.
                     </p>
                 </div>
             </div>

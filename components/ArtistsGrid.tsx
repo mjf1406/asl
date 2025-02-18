@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
@@ -136,75 +138,93 @@ export default function AuthorsPage() {
     return (
         <section className="p-4 md:p-8">
             <div className="grid gap-4 grid-cols-2">
-                {authorGroups.map(({ author, author_links, signs }, index) => (
-                    <Card
-                        key={index}
-                        className="pb-2"
-                    >
-                        <CardHeader>
-                            <CardTitle>{author}</CardTitle>
-                            <CardDescription>
-                                {signs.length} icon{signs.length > 1 ? "s" : ""}
-                            </CardDescription>
-                        </CardHeader>
+                {authorGroups.map(({ author, author_links, signs }, index) => {
+                    // Only display first 5 signs
+                    const displayedSigns = signs.slice(0, 5);
+                    const remainingCount = signs.length - displayedSigns.length;
 
-                        <CardContent className="px-4">
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                                {signs.map((sign) => {
-                                    const SignSVG = signComponents[sign.id];
-                                    return (
-                                        <div
-                                            key={sign.id}
-                                            className="flex flex-col items-center justify-center rounded-md border p-2"
-                                        >
-                                            <Suspense
-                                                fallback={<div>Loading...</div>}
+                    return (
+                        <Card
+                            key={index}
+                            className="pb-2"
+                        >
+                            <CardHeader>
+                                <CardTitle>{author}</CardTitle>
+                                <CardDescription>
+                                    {signs.length} icon
+                                    {signs.length > 1 ? "s" : ""}
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent className="px-4">
+                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                    {displayedSigns.map((sign) => {
+                                        const SignSVG = signComponents[sign.id];
+                                        return (
+                                            <div
+                                                key={sign.id}
+                                                className="flex flex-col items-center justify-center rounded-md border p-2"
                                             >
-                                                {SignSVG ? (
-                                                    <SignSVG
-                                                        width="30"
-                                                        height="30"
-                                                        style={{
-                                                            fill: "#000000",
-                                                        }}
-                                                        aria-label={`ASL sign for ${sign.meaning}`}
-                                                    />
-                                                ) : (
-                                                    <div className="text-xs italic text-muted-foreground">
-                                                        Loading...
-                                                    </div>
-                                                )}
-                                            </Suspense>
+                                                <Suspense
+                                                    fallback={
+                                                        <div>Loading...</div>
+                                                    }
+                                                >
+                                                    {SignSVG ? (
+                                                        <SignSVG
+                                                            width="30"
+                                                            height="30"
+                                                            style={{
+                                                                fill: "#000000",
+                                                            }}
+                                                            aria-label={`ASL sign for ${sign.meaning}`}
+                                                        />
+                                                    ) : (
+                                                        <div className="text-xs italic text-muted-foreground">
+                                                            Loading...
+                                                        </div>
+                                                    )}
+                                                </Suspense>
+                                                <span className="text-sm font-medium">
+                                                    {sign.meaning}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                    {remainingCount > 0 && (
+                                        <div className="flex flex-col items-center justify-center rounded-md border p-2 bg-muted">
                                             <span className="text-sm font-medium">
-                                                {sign.meaning}
+                                                +{remainingCount} more
                                             </span>
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        </CardContent>
-
-                        <CardFooter className="flex flex-col">
-                            <div className="text-sm -mb-1">Meet the Artist</div>
-                            {author_links.length > 0 && (
-                                <div className="-space-y-2">
-                                    {author_links.map((link, linkIndex) => (
-                                        <div key={linkIndex}>
-                                            <Link
-                                                href={link}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="text-xs hover:underline"
-                                            >
-                                                {link}
-                                            </Link>
-                                        </div>
-                                    ))}
+                                    )}
                                 </div>
-                            )}
-                        </CardFooter>
-                    </Card>
-                ))}
+                            </CardContent>
+
+                            <CardFooter className="flex flex-col">
+                                <div className="text-sm -mb-1">
+                                    Meet the Artist
+                                </div>
+                                {author_links.length > 0 && (
+                                    <div className="-space-y-2">
+                                        {author_links.map((link, linkIndex) => (
+                                            <div key={linkIndex}>
+                                                <Link
+                                                    href={link}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="text-xs hover:underline"
+                                                >
+                                                    {link}
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </CardFooter>
+                        </Card>
+                    );
+                })}
             </div>
         </section>
     );

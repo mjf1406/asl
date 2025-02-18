@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # ASL for Silent Time
 
 ## To-do
@@ -11,23 +13,28 @@
 -   has a Kahoot with all the signs either with art and/or video
 -   has a Blooket with all the signs either with art and/or video
 -   has a GimKit with all the signs either with art and/or video
+-   has a Quizlet with all the signs either with art and/or video
 
 ### p0
 
 -   get art 🥺
 -   can filter signs by category
--   fixed: there is no longer a subject-verb agreement error in the We popover.
 -   added a donation amount and people counter.
--   added an Idea feedback type to the survey.
--   made the survey open in a new tab.
 -   added explainers for the different ways to download.
--   TEST COMMIT
 
 ## Change Log
 
 UI = User Interface
 UX = User Experience
 BK = Background Knowledge
+
+2025/02/18
+
+-   made the survey open in a new tab.
+-   fixed: there is no longer a subject-verb agreement error in the We popover.
+-   added an Idea feedback type to the survey.
+-   UI: fixed up the artist to include Ekaraksasa
+-   UI: added image logos for the quiz games that I will make
 
 2024/12/31
 
