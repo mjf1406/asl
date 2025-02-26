@@ -254,6 +254,61 @@ export default function Home() {
                 <h2 className="text-center text-2xl">Meet the Artists</h2>
                 <ArtistsGrid />
             </div>
+            <div className="mb-5 max-w-xl mt-10">
+                <h2 className="text-center text-2xl">Want to Contribute?</h2>
+                <p className="mt-3">
+                    The more, the merrier! Be sure to include the sign meaning
+                    when you contact me. If you want to be credited, provide
+                    your name and any links you want associated with your SVGs.
+                    Then, choose one of the below!{" "}
+                </p>
+                <ol className="mt-2 list-decimal list-inside">
+                    <li className="ml-3">
+                        Submit a pull request on GitHub: put your SVG(s) in{" "}
+                        <Link
+                            className="link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={
+                                "https://github.com/mjf1406/asl/tree/main/app/asl-icons"
+                            }
+                        >
+                            /app/asl-icons{" "}
+                            <ExternalLink className="inline w-4 h-4" />
+                        </Link>{" "}
+                        and add the info to the signs object array in{" "}
+                        <Link
+                            className="link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={
+                                "https://github.com/mjf1406/asl/blob/main/lib/constants.ts"
+                            }
+                        >
+                            /app/lib/constants.ts{" "}
+                            <ExternalLink className="inline w-4 h-4" />
+                        </Link>
+                        .
+                    </li>
+                    <li className="ml-3">
+                        Email me your SVG(s) and the other information: michael
+                        dot fitzgerald dot 1406 at gmail.com.
+                    </li>
+                    <li className="ml-3">
+                        Message me on Reddit with the SVG(s) download link(s)
+                        and the other information:{" "}
+                        <Link
+                            className="link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={"https://www.reddit.com/user/teachcodecycle/"}
+                        >
+                            teachcodecycle{" "}
+                            <ExternalLink className="inline w-4 h-4" />
+                        </Link>
+                    </li>
+                </ol>
+            </div>
             <div className="max-w-xl">
                 <div className="space-y-4 mt-10">
                     <h2 className="text-center text-2xl">Silence Is Golden</h2>

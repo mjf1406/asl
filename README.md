@@ -28,6 +28,11 @@ UI = User Interface
 UX = User Experience
 BK = Background Knowledge
 
+2025/02/26
+
+-   added a Want to Contribute section
+-   2 more icons are done!
+
 2025/02/18
 
 -   made the survey open in a new tab.
