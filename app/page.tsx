@@ -387,7 +387,7 @@ export default function Home() {
                             Ko-fi
                         </a>
                         . If you donated, thank you kindly 😊 All donations go
-                        to covering the costs of new icons and hosting the site.
+                        to covering the costs of the icons and hosting the site.
                     </p>
                 </div>
             </div>
